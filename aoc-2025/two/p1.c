@@ -99,11 +99,11 @@ int main() {
             }
         }
 
-        u64 range_end = NumStr_flush(&num_accum);
-        printf("start %ld - end %ld\n", range_start, range_end);
-        sum_invalid_ids(range_start, range_end, &invalid_ids_sum);
 
         if (bytes_read < byte_count) {
+            u64 range_end = NumStr_flush(&num_accum);
+            printf("start %ld - end %ld\n", range_start, range_end);
+            sum_invalid_ids(range_start, range_end, &invalid_ids_sum);
             break;
         }
     }
