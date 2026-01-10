@@ -15,66 +15,34 @@ void Batteries_append(Batteries *b, int joltage) {
   b->count += 1;
 }
 
+#define WINDOW_SIZE 12
+
 u64 Batteries_flush(Batteries *b) {
   if (b->count == 0) {
     return 0;
   }
 
-  // Not working correctly, im not checking different positions of same numbers
-  int max_idxs[12] = {
-      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-  };
-  int maxes[256] = {};
-  for (int i = 0; i < 256; i += 1) {
-    maxes[i] = -1;
-  }
+  // u64 max = 0;
 
-  for (int iter = 0; iter < 12; iter += 1) {
-    int max = 0;
-    int max_idx = 0;
+  for (int i = 0; i < b->count - WINDOW_SIZE; i += 1) {
+    // now need to find 12 highest
+    // and update overall max if it is greater
+    int count = 0;
+    while (count < 12) {
+      int max = 0;
+      int indexes[12]
 
-    for (int i = 0; i < b->count; i += 1) {
-      int is_excluded = 0;
-      for (int j = 0; j < iter; j += 1) {
-        if (i == max_idxs[j]) {
-          is_excluded = 1;
-          break;
-        }
-      }
+      for (int j = i + count; j < b->count; j += 1) {
+        int digit = b->joltages[j];
+        if (digit > max) {
 
-      if (is_excluded == 0) {
-        int joltage = b->joltages[i];
-        if (joltage > max) {
-          max = joltage;
-          max_idx = i;
-
-          max_idxs[iter] = i;
-          // printf("iter %d idx %d\n", iter, i);
         }
       }
     }
-
-    maxes[max_idx] = max;
-
-    printf("%d", max);
-    // sum = (sum * 10) + max;
   }
-
-  printf("\n");
-
-  u64 sum = 0;
-
-  for (int i = 0; i < 256; i += 1) {
-    u64 m = (u64)(maxes[i]);
-    if (m != -1) {
-      printf("%ld", m);
-      sum = (sum * 10) + m;
-    }
-  }
-  printf("\n");
 
   b->count = 0;
-  return sum;
+  return 0;
 }
 
 int main() {
